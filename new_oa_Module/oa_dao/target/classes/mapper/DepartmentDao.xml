@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vran.oa.dao.DepartmentDao">
+
+    <insert id="insert">
+        INSERT INTO department (sn, name, address)
+        VALUES (#{sn}, #{name}, #{address});
+    </insert>
+
+    <update id="update">
+        update
+            department
+        set sn=#{sn},
+            name=#{name},
+            address=#{address}
+        where sn = #{sn};
+    </update>
+
+    <delete id="delete">
+        delete
+        from department
+        where sn = #{sn};
+    </delete>
+
+    <!--查找当前-->
+    <select id="select" resultType="department">
+        select sn, name, address
+        from department
+        where sn = #{sn};
+    </select>
+
+    <!--查找全部-->
+    <select id="selectAll" resultType="department">
+        select sn, name, address
+        from department;
+    </select>
+</mapper>

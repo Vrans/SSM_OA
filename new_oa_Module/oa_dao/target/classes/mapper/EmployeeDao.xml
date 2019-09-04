@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.vran.oa.dao.EmployeeDao">
+
+    <insert id="insert">
+        INSERT INTO employee
+        VALUES (#{sn}, #{password}, #{name}, #{departmentSn}, #{post});
+    </insert>
+
+    <update id="update">
+        UPDATE
+            employee
+        SET sn            = #{sn},
+            name          = #{name},
+            password      = #{password},
+            department_sn = #{departmentSn},
+            post          = #{post}
+        WHERE sn = #{sn};
+    </update>
+
+    <delete id="delete">
+        delete
+        from employee
+        where sn = #{sn};
+    </delete>
+
+    <!--查询集合-->
+    <resultMap id="departmentMap" type="employee">
+        <id property="sn" column="sn"/>
+        <result property="name" column="name"/>
+        <result property="departmentSn" column="department_sn"/>
+        <result property="password" column="password"/>
+        <result property="post" column="post"/>
+        <association property="department" javaType="Department">
+            <id property="sn" column="dsn"/>
+            <result property="name" column="dname"/>
+            <result property="address" column="daddress"/>
+        </association>
+    </resultMap>
+
+    <select id="select" resultMap="departmentMap">
+        select e.sn, e.name, e.password, e.department_sn , e.post, d.sn dsn , d.name dname,d.address daddress
+        from employee e
+                 left join department d on e.department_sn = d.sn
+        where e.sn = #{sn};
+    </select>
+
+    <select id="selectAll" resultMap="departmentMap">
+        select e.sn, e.name, e.password, e.department_sn, e.post,d.sn dsn,d.name dname,d.address daddress
+        from employee e left join department d on e.department_sn = d.sn;
+    </select>
+
+    <select id="selectDepartmentAndPost" resultMap="departmentMap">
+        select e.sn, e.name, e.password, e.department_sn, e.post, d.sn dsn, d.name dname,d.address daddress
+        from employee e
+        left join department d o n e.department_sn = d.sn
+        <where>
+            <if test="dsn != null">
+                e.department_sn=#{dsn}
+            </if>
+            <if test="post !=null">
+                and e.post=#{post};
+            </if>
+        </where>
+    </select>
+
+</mapper>
